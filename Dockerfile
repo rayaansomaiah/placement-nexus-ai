@@ -1,28 +1,25 @@
-# ---- Build client ----
-FROM node:20-alpine AS client-build
-WORKDIR /app/client
-COPY client/package*.json ./
-RUN npm install
-COPY client/ .
-RUN npm run build
-
-# ---- Build server ----
-FROM node:20-alpine AS server-build
-WORKDIR /app/server
-COPY server/package*.json ./
-RUN npm install
-COPY server/ .  # Removed `npm run build` unless it's actually needed
-
-# ---- Final image ----
 FROM node:20-alpine
+
+# Set working directory to root of the project
 WORKDIR /app
 
-# Copy server code
-COPY --from=server-build /app/server /app/server
+# Copy root package.json and lock (if any)
+COPY package*.json ./
 
-# Copy built frontend
-COPY --from=client-build /app/client/dist /app/server/dist
+# Install root dependencies (if using a monorepo tool like `concurrently`)
+RUN npm install
 
-WORKDIR /app/server
+# Copy the full project (client + server)
+COPY client/ ./client
+COPY server/ ./server
+
+# Install dependencies in client and server
+RUN cd client && npm install
+RUN cd server && npm install
+
+# Expose dev ports if needed (adjust as per client/server config)
+EXPOSE 3000
 EXPOSE 5000
-CMD ["npm", "run", "serve"]
+
+# Run dev command from root
+CMD ["npm", "run", "dev"]
