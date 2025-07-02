@@ -38,5 +38,6 @@ WORKDIR /app/server
 
 EXPOSE 5000
 
+ENV NODE_ENV=production
 # Start the compiled backend (adjust if output isn't dist/index.js)
 CMD ["node", "dist/index.js"]
