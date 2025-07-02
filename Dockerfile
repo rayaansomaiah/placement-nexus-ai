@@ -18,7 +18,6 @@ RUN cd client && npm install
 RUN cd server && npm install
 
 # Expose dev ports if needed (adjust as per client/server config)
-EXPOSE 3000
 EXPOSE 5000
 
 # Run dev command from root
