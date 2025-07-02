@@ -32,6 +32,14 @@ app.use('/api/student', studentRoutes);
 app.use('/api/recruiter', recruiterRoutes);
 app.use('/api/college', collegeRoutes);
 
+// Serve frontend build (client)
+app.use(express.static(path.join(__dirname, 'dist')));
+
+// Handle SPA (Single Page Application) routing
+app.get('*', (req: Request, res: Response) => {
+  res.sendFile(path.join(__dirname, 'dist', 'index.html'));
+});
+
 app.listen(port, () => {
   console.log(`[server]: Server is running at http://localhost:${port}`);
 }); 
