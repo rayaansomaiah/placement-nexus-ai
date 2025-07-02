@@ -22,24 +22,20 @@ app.use(express.json());
 // Serve static files from the 'uploads' directory
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
-app.get('/', (req: Request, res: Response) => {
-  res.send('Campus Placement Platform API is running...');
-});
-
-// Define Routes
+// Define API Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/student', studentRoutes);
 app.use('/api/recruiter', recruiterRoutes);
 app.use('/api/college', collegeRoutes);
 
-// Serve frontend build (client)
+// Serve frontend build (client) **AFTER** API routes
 app.use(express.static(path.join(__dirname, 'dist')));
 
-// Handle SPA (Single Page Application) routing
+// Catch-all for SPA (React Router)
 app.get('*', (req: Request, res: Response) => {
   res.sendFile(path.join(__dirname, 'dist', 'index.html'));
 });
 
 app.listen(port, () => {
   console.log(`[server]: Server is running at http://localhost:${port}`);
-}); 
+});
